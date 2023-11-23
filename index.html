@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+            .container{
+                width: 300px;
+                height: auto;
+                border: 3px solid black;
+                margin: 0 auto;
+            }
+
+            .typeArea{
+                border: 2px solid #3498db;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 16px;
+                width: 276px;
+                outline: none;
+                transition: border-color 0.3s ease;
+            }
+            .styled-input:focus {
+                border-color: #2ecc71;
+            }
+
+            .styled-input::placeholder {
+                color: #95a5a6;
+            }
+
+            .button{
+                width: 100px;
+                height: 100px;
+                border: 1px solid black;
+            }
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+    <input type="text" class="typeArea" placeholder="">
+</div>
+<script src="script.js"></script>
+</body>
+</html>
