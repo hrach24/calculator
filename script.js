@@ -1,4 +1,4 @@
-let numbers = ['CE','C','1','2','3','4','5','6','7','8','9','0','+','-','/','*','=']
+let numbers = ['CE','C','X','9','8','7','6','5','4','3','2','1','0','+','-','/','*','=']
 let calculator = document.querySelector('.container')
 let typeArea = document.querySelector('.typeArea')
 let arr = []
@@ -7,6 +7,7 @@ let str = ''
 let index = 1
 let finalNum = 0
 let click = 0
+let methodButtons
 
 for (let i = 0; i < numbers.length; i++) {
     let button = document.createElement('button')
@@ -22,6 +23,8 @@ for (let i = 0; i < numbers.length; i++) {
     }else if(button.innerHTML === 'CE'){
         button.classList.add('numClear')
 
+    }else if(button.innerHTML === 'C'){
+        button.classList.add('clear')
     }
     else {
         button.classList.add('num')
@@ -33,33 +36,68 @@ let buttons = document.querySelectorAll('button')
 buttons.forEach(button => {
     button.addEventListener("click", e => {
 
-
-
-
         let clickedNumber = e.target.innerHTML
 
         if (e.target.classList.contains('num')){
-
-            str += e.target.innerHTML
-            console.log(str + 'str')
-            console.log(arr)
-            typeArea.value += clickedNumber
         
+            str += e.target.innerHTML
+            
+            typeArea.value += clickedNumber
+
+
+            //deleting if clicked after equal and adding clicked number
+            if(arr.length === 1){
+
+                typeArea.value = ''
+                typeArea.value = clickedNumber
+                arr.length = 0
+
+            }
+            
+            //Checking if the methoButtons are exist, if true delete disable class 
+            if(methodButtons !== undefined){
+                methodButtons.forEach(button => {
+                    button.classList.remove('disabledMethodButtons')
+                })
+            
+        }
+
+
         } else if (e.target.classList.contains('method')){
+
+            //Adding disable class to method buttons, if they already exist after click
+
+            methodButtons = document.querySelectorAll('.method')
+            console.log(methodButtons)
+            methodButtons.forEach(el => {
+                el.classList.add('disabledMethodButtons')
+            })
+           
+
             let method = e.target.innerHTML
             typeArea.value += e.target.innerHTML
 
             //if we dont write if statemant after the equal button we are adding empty str to arr
             //thats why we cant count after equal method
+
             if(str === ''){
                 arr.push(method)
+                console.log('if')
             }else{
+
                 arr.push(str, method)
                 str = ''
+                console.log('else')
             }
             
             
         }if (e.target.classList.contains('equal')){
+            
+            //removing disabledMethodButtons class 
+            methodButtons.forEach(button => {
+                button.classList.remove('disabledMethodButtons')
+            })
+
             count(arr)
             arr.length = 0
             firstNum = finalNum[0]
@@ -92,6 +130,19 @@ buttons.forEach(button => {
 
         }
 
+        if(e.target.classList.contains('clear')){
+            if(arr.length !== 0){
+                str = ''
+                typeArea.value = ''
+                arr.length = 0
+            
+            }else{
+                str = ''
+                typeArea.value = ''
+            }
+
+        }
+
     })
 })
 
@@ -100,7 +151,6 @@ function count(val){
     val.pop()
     let array = val
     copy = array.slice()
-    // console.log(copy)
 
     for (let i = 0; i < copy.length; i++){
         if (copy[i] === '*' || copy[i] === '/'){
@@ -121,7 +171,6 @@ function count(val){
         }
 
     }
-    // console.log(finalNum)
 }
 
 
@@ -144,7 +193,6 @@ function minusPlus(method, firstNum, secNum, index){
         copy.splice(index - 1, 3, minResult)
     }else if (method === '+'){
         minResult = String(firstNum + secNum)
-        // console.log(minResult)
         copy.splice(index - 1, 3, minResult)
     }
     return copy
