@@ -7,8 +7,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 3px;
+                color: #fff;
+                background-color: dodgerblue;
+                width: 80px ! important;
+                height: 80px ! important;
+            }
+
+            button:hover{
+                background-color: #fff;
+                color: black;
+            }
+
+            .method{
+                background-color: #ff4500;
+            }
+
             .container{
-                width: 300px;
+                width: 319px;
                 height: auto;
                 border: 3px solid black;
                 margin: 0 auto;
@@ -19,7 +39,7 @@
                 border-radius: 5px;
                 padding: 10px;
                 font-size: 16px;
-                width: 276px;
+                width: 93%;
                 outline: none;
                 transition: border-color 0.3s ease;
             }
@@ -32,13 +52,30 @@
             }
 
             .button{
-                width: 100px;
-                height: 100px;
                 border: 1px solid black;
             }
 
             .disabledMethodButtons{
                 pointer-events: none;
+            }
+
+            .zero{
+                width: 100% ! important;
+            }
+
+            .divNumbers{
+                width: 240px;
+            }
+
+            .methods{
+                width: 79px;
+                height: 317px;
+                background-color: red;
+                float: right;
+            }
+
+            .bgcolor{
+                background-color: orangered;
             }
     </style>
 </head>
@@ -47,6 +84,11 @@
 
 <div class="container">
     <input type="text" class="typeArea" placeholder="">
+    <div class="divNumbers">
+
+    </div>
+
+    <div class="methods"></div>
 </div>
 <script src="script.js"></script>
 </body>
