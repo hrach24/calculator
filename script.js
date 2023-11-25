@@ -1,4 +1,5 @@
-let numbers = ['CE','C','X','9','8','7','6','5','4','3','2','1','0','+','-','/','*','=']
+let numbers = ['CE','C','/','9','8','7','6','5','4','3','2','1','0','+','-','*','=']
+// 'CE','C',,'+','-','/','*','='
 let calculator = document.querySelector('.container')
 let typeArea = document.querySelector('.typeArea')
 let arr = []
@@ -8,11 +9,18 @@ let index = 1
 let finalNum = 0
 let click = 0
 let methodButtons
-
+let div = document.querySelector('.divNumbers')
+let methodDiv = document.querySelector('.methods')
 for (let i = 0; i < numbers.length; i++) {
+    
     let button = document.createElement('button')
+    
     button.innerHTML = numbers[i]
     button.classList.add('button')
+    
+
+
+    
     if (button.innerHTML === '='){
         button.classList.add('method')
         button.classList.add('equal')
@@ -20,16 +28,35 @@ for (let i = 0; i < numbers.length; i++) {
     } else if (button.innerHTML === '*' || button.innerHTML === '/' || button.innerHTML === '+' || button.innerHTML === '-') {
         button.classList.add('method')
     
+    }else if (button.innerHTML === '0') {
+        button.classList.add('zero')
+
     }else if(button.innerHTML === 'CE'){
         button.classList.add('numClear')
+        button.classList.add('bgcolor')
 
     }else if(button.innerHTML === 'C'){
         button.classList.add('clear')
+        button.classList.add('bgcolor')
+    
     }
     else {
         button.classList.add('num')
     }
-    calculator.append(button)
+
+
+    if (button.innerHTML === '+' || button.innerHTML === '-' || button.innerHTML === '*' || button.innerHTML === '='){
+        methodDiv.append(button)
+    
+    }else if(button.innerHTML === '0'){
+        calculator.append(button)
+    }
+    
+    else{
+        div.append(button)
+        calculator.append(div)
+    }
+
 }
 
 let buttons = document.querySelectorAll('button')
@@ -46,8 +73,8 @@ buttons.forEach(button => {
 
 
             //deleting if clicked after equal and adding clicked number
-            if(arr.length === 1){
-
+            if(arr.length === 1 && arr[0] !== '-'){
+                console.log(arr)
                 typeArea.value = ''
                 typeArea.value = clickedNumber
                 arr.length = 0
@@ -82,12 +109,11 @@ buttons.forEach(button => {
 
             if(str === ''){
                 arr.push(method)
-                console.log('if')
+
             }else{
 
                 arr.push(str, method)
                 str = ''
-                console.log('else')
             }
             
             
@@ -104,11 +130,16 @@ buttons.forEach(button => {
             arr.unshift(finalNum[0])
             
             typeArea.value = finalNum
-            console.log(e.target)
-            console.log(click++)
+         
         }
 
         if (e.target.classList.contains('numClear')){
+            //Checking if there is any buttons that are disabled
+            if(methodButtons){
+                methodButtons.forEach(el => {
+                    el.classList.remove('disabledMethodButtons')
+                })    
+            }
 
             if (arr.length === 0){
                 str = ''
@@ -121,7 +152,6 @@ buttons.forEach(button => {
                 str = ''
             }
             else{
-                console.log(arr.join(''))
                 let removed = arr.join('')
                 str = ''
                 typeArea.value = removed
@@ -131,6 +161,12 @@ buttons.forEach(button => {
         }
 
         if(e.target.classList.contains('clear')){
+            //Checking if there is any buttons that are disabled
+            if(methodButtons){
+                methodButtons.forEach(el => {
+                    el.classList.remove('disabledMethodButtons')
+                })    
+            }
             if(arr.length !== 0){
                 str = ''
                 typeArea.value = ''
@@ -166,6 +202,16 @@ function count(val){
         if (copy[z] === '-' || copy[z] === '+'){
             let firstNum = +copy[z - 1]
             let secNum = +copy[z + 1]
+            // console.log(arr)
+            // console.log(firstNum)
+            if(isNaN(firstNum) && copy[0] === '-'){
+                let c = copy[0] + copy[z + 1]
+                console.log(copy[0] + copy[z + 1])
+                copy.splice(0,2, c )
+                console.log(copy)
+               
+            }
+
             finalNum = minusPlus(copy[z], firstNum, secNum, z)
             z--
         }
@@ -191,9 +237,11 @@ function minusPlus(method, firstNum, secNum, index){
     if (method === '-'){
         minResult = String(firstNum - secNum)
         copy.splice(index - 1, 3, minResult)
+        console.log(copy)
     }else if (method === '+'){
         minResult = String(firstNum + secNum)
         copy.splice(index - 1, 3, minResult)
+        console.log(copy)
     }
     return copy
 }
