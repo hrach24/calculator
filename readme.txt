@@ -1,3 +1,3 @@
 Update 
- 1. Style is complated
- 2. Fixed bugs, for example now we can type - button and count negative numbers
+1. Style css file added
+2. Code became more readable
