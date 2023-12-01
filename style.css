@@ -68,3 +68,8 @@ button:hover{
 .bgColor{
     background-color: orangered;
 }
+
+.clickedMethod{
+    background-color: white;
+    color: black;
+}
