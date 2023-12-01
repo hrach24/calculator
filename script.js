@@ -9,6 +9,7 @@ let methodButtons = [] //Disabled class buttons array
 let div = document.querySelector('.divNumbers')
 let methodDiv = document.querySelector('.methods')
 let methodClickCount = 0
+let numClickCount = 0
 
 for (let i = 0; i < numbers.length; i++) {
     let button = document.createElement('button')
@@ -65,8 +66,8 @@ buttons.forEach(button => {
 
         function count(target){
             removeDisableClass()
-            typeArea.value = target.innerHTML //adding number to input value
             inputData += target.innerHTML //adding the clicked number to string value
+            typeArea.value = inputData //adding number to input value
 
             let removeClickedMethodBgColor = document.querySelector('.clickedMethod')
             if (removeClickedMethodBgColor) {
@@ -79,8 +80,9 @@ buttons.forEach(button => {
             addDisableClass()
             target.classList.add('clickedMethod') //Setting bgColor to clicked method button
             // methodClickCount++
-            typeArea.value += target.innerHTML //adding method to input value
+            // typeArea.value += target.innerHTML //adding method to input value
             typeAreaData.push(inputData, target.innerHTML)
+            console.log(typeAreaData)
             inputData = '' // Making empty to assign a new variable after method button click
             // console.log(typeAreaData)
             // if (methodClickCount > 2 && typeAreaData[typeAreaData.length - 1] === '*'){
@@ -90,13 +92,18 @@ buttons.forEach(button => {
             // }else if (methodClickCount > 1 && typeAreaData[typeAreaData.length - 1] === '-'){
             //    countt(typeAreaData, target.innerHTML)
             // }
-
-            if (target.innerHTML === '*' || target.innerHTML === '/'){
-                methodClickCount++
-                if (methodClickCount > 1){
-                    methodCount(typeAreaData, target.innerHTML)
+            if (e.target.innerHTML === '+' || e.target.innerHTML === '-'){
+              numClickCount++
+                if (numClickCount === 2){
+                    countt(typeAreaData, e.target.innerHTML)
                 }
 
+            }else if (e.target.innerHTML === '*' || e.target.innerHTML === '/'){
+                methodClickCount++
+                if (methodClickCount === 2){
+                    // console.log('ok')
+                    multiply(typeAreaData, e.target.innerHTML)
+                }
             }
 
         }
@@ -119,24 +126,31 @@ buttons.forEach(button => {
             })
         }
 
-        function countt(typeAreaData, method){
+        function countt(typeAreaData){
+
             let minResult = 0
+            let method = typeAreaData.find((el) => isNaN(+el))
+
+
+
             let methodIndex = typeAreaData.indexOf(method)
             let firstNum = +typeAreaData[methodIndex - 1]
             let secNum = +typeAreaData[methodIndex + 1]
-            finalNum = multiply(method, firstNum, secNum, methodIndex)
 
-            console.log(methodIndex, firstNum, secNum)
+
             if (method === '-'){
                 minResult = String(firstNum - secNum)
                 typeAreaData.splice(methodIndex - 1, 3, minResult)
                 console.log(typeAreaData)
-                typeArea.value = typeAreaData[0]
+                numClickCount--
+                typeArea.value = minResult
+
             }else if (method === '+'){
                 minResult = String(firstNum + secNum)
-                typeAreaData.splice(index - 1, 3, minResult)
+                typeAreaData.splice(methodIndex - 1, 3, minResult)
                 console.log(typeAreaData)
-                typeArea.value = typeAreaData[0]
+                numClickCount--
+                typeArea.value = minResult
             }
             return typeAreaData
 
@@ -230,21 +244,29 @@ buttons.forEach(button => {
     })
 })
 
-function multiply(method, firstNum, secNum, index){
-    let result = 0
+function multiply(typeAreaData){
+    let res = 0
+    let method = typeAreaData.find(element => element === '*' || element === '/');
+    let methodIndex = typeAreaData.indexOf(method)
+    let firstNum = +typeAreaData[methodIndex - 1]
+    let secNum = +typeAreaData[methodIndex + 1]
 
-    if (method === '/'){
-        result = String(firstNum / secNum)
-        typeAreaData.splice(index - 1, 3, result)
-        typeArea.value = typeAreaData[typeAreaData.length - 2]
+    if (method === '*'){
+        res = String(firstNum * secNum)
+        typeAreaData.splice(methodIndex - 1, 3, res)
         console.log(typeAreaData)
-    }else if (method === '*'){
-        result = String(firstNum * secNum)
-        typeAreaData.splice(index - 1, 3, result)
-        typeArea.value = typeAreaData[typeAreaData.length - 2]
+        methodClickCount--
+        typeArea.value = res
+
+    }else if (method === '/'){
+        res = String(firstNum / secNum)
+        typeAreaData.splice(methodIndex - 1, 3, res)
         console.log(typeAreaData)
+        methodClickCount--
+        typeArea.value = res
     }
     return typeAreaData
+
 }
 // function count(val){
 //     val.pop()
