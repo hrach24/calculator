@@ -42,6 +42,7 @@ for (let i = 0; i < numbers.length; i++) {
         methodDiv.append(button);
     
     }else if (button.innerHTML === '0'){
+        button.classList.add('disabledMethodButtons')
         calculator.append(button);
 
     }else {
@@ -73,6 +74,8 @@ buttons.forEach(button => {
         }
 
         function count(target){
+            let zeroBtn = document.querySelector('.zero')
+            zeroBtn.classList.remove('disabledMethodButtons')
             //when typeAreaData.length === 1, means it clicked to equal button, so we show new clicked number after equal button click
             if (typeAreaData.length === 1){
                 typeArea.value = '';
@@ -84,12 +87,12 @@ buttons.forEach(button => {
             removeDisableClass();
             inputData += target.innerHTML; //adding the clicked number to string value
             typeArea.value = inputData; //adding number to input value
-            let removeClickedMethodBgColor = document.querySelector('.clickedMethod');
-
+            let removeClickedMethodBgColor = document.querySelector('.clickedMethod'); //removing method bgColor after number click
             if (removeClickedMethodBgColor) {
                 removeClickedMethodBgColor.classList.remove('clickedMethod');
 
             }
+
         }
 
         function method(target){
@@ -118,7 +121,6 @@ buttons.forEach(button => {
 
             if (e.target.innerHTML === '+' || e.target.innerHTML === '-'){
                 numClickCount++
-
                 if (numClickCount === 1 && typeAreaData.length === 4){
                     countMathExpression(typeAreaData);
                     //in real calculator if we do 2-2*2* first it will count the 2*2 returns its result then will count the others
@@ -134,7 +136,6 @@ buttons.forEach(button => {
 
             }else if (e.target.innerHTML === '*' || e.target.innerHTML === '/'){
                 methodClickCount++
-
                 if (methodClickCount === 2){
                     multiply(typeAreaData, e.target.innerHTML);
                     //setting method click count is equal to 2, because in real calculator if we do
@@ -253,6 +254,8 @@ function numClear(){
 }
 
 function clear(){
+    let zeroBtn = document.querySelector('.zero')
+    zeroBtn.classList.add('disabledMethodButtons')
     addDisableClass();
     let removeClickedMethodBgColor = document.querySelector('.clickedMethod');
     if (removeClickedMethodBgColor) {
