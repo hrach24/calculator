@@ -3,7 +3,7 @@ let calculator = document.querySelector('.container');
 let typeArea = document.querySelector('.typeArea');
 let inputData = '';
 let typeAreaData = [];
-let clickedMethodArray = []
+let clickedMethodArray = [];
 let methodButtons = []; //Disabled class buttons array
 let div = document.querySelector('.divNumbers');
 let methodDiv = document.querySelector('.methods');
@@ -15,7 +15,7 @@ for (let i = 0; i < numbers.length; i++) {
     button.innerHTML = numbers[i];
     button.classList.add('button');
 
-    if (button.innerHTML === '='){
+    if (button.innerHTML === '=') {
         button.classList.add('method');
         button.classList.add('equal');
 
@@ -23,14 +23,14 @@ for (let i = 0; i < numbers.length; i++) {
         button.classList.add('method');
     
     }else if (button.innerHTML === '0') {
-        button.classList.add('zero');
         button.classList.add('num');
+        button.classList.add('zero');
 
-    }else if (button.innerHTML === 'CE'){
+    }else if (button.innerHTML === 'CE') {
         button.classList.add('numClear');
         button.classList.add('bgColor');
 
-    }else if (button.innerHTML === 'C'){
+    }else if (button.innerHTML === 'C') {
         button.classList.add('clear');
         button.classList.add('bgColor');
     
@@ -38,10 +38,10 @@ for (let i = 0; i < numbers.length; i++) {
         button.classList.add('num');
 
     }
-    if (button.innerHTML === '+' || button.innerHTML === '-' || button.innerHTML === '*' || button.innerHTML === '='){
+    if (button.innerHTML === '+' || button.innerHTML === '-' || button.innerHTML === '*' || button.innerHTML === '=') {
         methodDiv.append(button);
     
-    }else if (button.innerHTML === '0'){
+    }else if (button.innerHTML === '0') {
         calculator.append(button);
 
     }else {
@@ -55,37 +55,35 @@ let buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
     addDisableClass();
     button.addEventListener("click", e => {
-        if (e.target.classList.contains('num')){
+        if (e.target.classList.contains('num')) {
             count(e.target);
 
-        }else if (e.target.classList.contains('equal')){
+        }else if (e.target.classList.contains('equal')) {
             equal(e.target);
 
-        }else if (e.target.classList.contains('method')){
+        }else if (e.target.classList.contains('method')) {
             method(e.target);
 
-        }else if(e.target.classList.contains('clear')){
+        }else if(e.target.classList.contains('clear')) {
             clear();
 
-        }else if (e.target.classList.contains('numClear')){
+        }else if (e.target.classList.contains('numClear')) {
             numClear();
 
         }
 
         function count(target){
             //when typeAreaData.length === 1, means it clicked to equal button, so we show new clicked number after equal button click
-            if (typeAreaData.length === 1){
+            if (typeAreaData.length === 1) {
                 typeArea.value = '';
                 typeArea.value = target.innerHTML;
                 typeAreaData.length = 0;
-                // console.log(typeAreaData)
 
             }
             removeDisableClass();
             inputData += target.innerHTML; //adding the clicked number to string value
             typeArea.value = inputData; //adding number to input value
             let removeClickedMethodBgColor = document.querySelector('.clickedMethod');
-
             if (removeClickedMethodBgColor) {
                 removeClickedMethodBgColor.classList.remove('clickedMethod');
 
@@ -93,85 +91,58 @@ buttons.forEach(button => {
         }
 
         function method(target){
-            let button = document.querySelector('.clickedMethod')
+            let button = document.querySelector('.clickedMethod');
             target.classList.add('clickedMethod'); //Setting bgColor to clicked method button
-
-            if (inputData !== ''){ //pushing the clicked element tp typedArrData
+            if (inputData !== '') { //pushing the clicked method button to typedArrData with the clicked number
                 typeAreaData.push(inputData, target.innerHTML);
 
-            }else{
+            }else { //rewriting every time when it's clicked on another method button
+                typeAreaData.pop();
                 typeAreaData.push(target.innerHTML);
+                if (button) { // checking if there is any method button click after and deleting its class
+                    button.classList.remove('clickedMethod');
 
+                }
             }
-            let lastMethodBeforeClick = typeAreaData[typeAreaData.length - 2]
-
-            //overwriting the method
-            if (isNaN(+lastMethodBeforeClick)){
-
-                button.classList.remove('clickedMethod') //removing white background color from previous clicked button
-                typeAreaData.splice(1,1)
-            }
-            console.log(clickedMethodArray)
-            console.log(typeAreaData)
-
             inputData = ''; // Making empty to assign a new variable after method button click
+            if (typeAreaData[5] === '*' || typeAreaData[5] === '/' && typeAreaData.length === 6) {
+                multiply(typeAreaData, e.target.innerHTML);
 
-            if (e.target.innerHTML === '+' || e.target.innerHTML === '-'){
-                numClickCount++
+            }else if (typeAreaData[5] === '+' || typeAreaData[5] === '-' && typeAreaData.length === 6) {
+                countMathExpression(typeAreaData);
 
-                if (numClickCount === 1 && typeAreaData.length === 4){
-                    countMathExpression(typeAreaData);
-                    //in real calculator if we do 2-2*2* first it will count the 2*2 returns its result then will count the others
-                    // so 2-2*2* its length is 4, that's why we are checking if the typedArrData length is 4
+            }else if (typeAreaData[3] === '+' || typeAreaData[3] === '-' && typeAreaData.length === 4) {
+                countMathExpression(typeAreaData);
 
-                }
-
-                if (numClickCount === 2){
-                    countMathExpression(typeAreaData, e.target.innerHTML);
-                    //setting num click count is equal to 2, because in real calculator if we click 2 times to + or -
-                    // it will count the result and return it
-                }
-
-            }else if (e.target.innerHTML === '*' || e.target.innerHTML === '/'){
-                methodClickCount++
-
-                if (methodClickCount === 2){
-                    multiply(typeAreaData, e.target.innerHTML);
-                    //setting method click count is equal to 2, because in real calculator if we do
-                    //5*2*2 means we already have two * methods here and we call multiply function to count and return it
-
-                }
             }
         }
 
         function equal(target){
-            removeDisableClass()
-            typeAreaData.push(inputData, target.innerHTML);
-            countMathExpression(typeAreaData);
+            removeDisableClass();
+            if (inputData !== '') { //we do this because when the inputData is empty it will add ' ' to typeAreaDate
+                typeAreaData.push(inputData);
+                countMathExpression(typeAreaData);
+
+            }
         }
 
         function countMathExpression(typeAreaData){
-            let lastElement = typeAreaData[typeAreaData.length - 1];
-            typeAreaData.pop(lastElement);
-
-            for (let i = 0; i < typeAreaData.length; i++){
-                if (typeAreaData[i] === '*' || typeAreaData[i] === '/'){
+            for (let i = 0; i < typeAreaData.length; i++) {
+                if (typeAreaData[i] === '*' || typeAreaData[i] === '/') {
                     let method = typeAreaData[i];
                     let firstNum = +typeAreaData[i - 1];
                     let secNum = +typeAreaData[i + 1];
 
-                    if(method === '*'){
+                    if (method === '*') {
                         let res = firstNum * secNum;
                         typeAreaData.splice(i - 1, 3, String(res));
-                        methodClickCount--
-                        // console.log(typeAreaData);
+                        methodClickCount--;
 
                     }else if (method === '/'){
                         let res = firstNum / secNum;
                         typeAreaData.splice(i - 1, 3, String(res));
-                        methodClickCount--
+                        methodClickCount--;
                         typeArea.value = res;
-                        // console.log(typeAreaData);
 
                     }
                 }
@@ -183,53 +154,43 @@ buttons.forEach(button => {
                     let firstNum = +typeAreaData[z - 1];
                     let secNum = +typeAreaData[z + 1];
 
-                    if(method === '+'){
+                    if (method === '+') {
                         let res = firstNum + secNum;
                         typeAreaData.splice(z - 1, 3, String(res));
                         typeArea.value = res;
-                        numClickCount--
+                        numClickCount--;
 
-                    }else if (method === '-'){
+                    }else if (method === '-') {
                         let res = firstNum - secNum;
                         typeAreaData.splice(z - 1, 3, String(res));
                         typeArea.value = res;
-                        numClickCount--
+                        numClickCount--;
 
                     }
                 }
             }
-
-            if (lastElement !== '='){
-                typeAreaData.push(lastElement);
-                typeArea.value = typeAreaData[0];
-
-            }
-            typeArea.value = typeAreaData[0];
-            inputData = '';
         }
     })
 })
 
-function multiply(typeAreaData){
+function multiply(typeAreaData) {
     let res = 0;
     let method = typeAreaData.find(element => element === '*' || element === '/');
     let methodIndex = typeAreaData.indexOf(method);
     let firstNum = +typeAreaData[methodIndex - 1];
     let secNum = +typeAreaData[methodIndex + 1];
 
-    if (method === '*'){
+    if (method === '*') {
         res = String(firstNum * secNum);
         typeAreaData.splice(methodIndex - 1, 3, res);
-        methodClickCount--
+        methodClickCount--;
         typeArea.value = res;
-        // console.log(typeAreaData);
 
-    }else if (method === '/'){
+    }else if (method === '/') {
         res = String(firstNum / secNum);
         typeAreaData.splice(methodIndex - 1, 3, res);
         methodClickCount--;
         typeArea.value = res;
-        // console.log(typeAreaData);
 
     }
     return typeAreaData
@@ -241,7 +202,7 @@ function multiply(typeAreaData){
 //button is the 0 index in that array
 
 function numClear(){
-    if (typeAreaData.length === 2){
+    if (typeAreaData.length === 2) {
         inputData = '';
         typeArea.value = 0;
         let lastClickedMethodIndex = typeAreaData.length - 1;
@@ -249,6 +210,7 @@ function numClear(){
         let arrFromListedElement = Array.from(methodButtons);
         let lastClickedMethod = arrFromListedElement.find(el => el.innerHTML === lastClickedMethodInnerHTML);
         lastClickedMethod.classList.add('clickedMethod');
+
     }
 }
 
@@ -260,7 +222,7 @@ function clear(){
 
     }
     inputData = '';
-    typeArea.value = '';
+    typeArea.value = 0;
     methodClickCount = 0;
     numClickCount = 0;
     typeAreaData.length = 0;
@@ -269,7 +231,7 @@ function clear(){
 function addDisableClass(){
     methodButtons = document.querySelectorAll('.method');
     methodButtons.forEach(button => {
-        button.classList.add('disabledMethodButtons')
+        button.classList.add('disabledMethodButtons');
     })
 }
 
